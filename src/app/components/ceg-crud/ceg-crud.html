@@ -1,0 +1,50 @@
+<h2>Cégek kezelése</h2>
+
+<div style="display: flex; gap: 20px;">
+  <div style="flex: 1;">
+    <h3>Új cég létrehozása</h3>
+    <form (ngSubmit)="createCeg()">
+      <div>
+        <label>Név:</label>
+        <input type="text" [(ngModel)]="createForm.nev" name="createNev" required>
+      </div>
+      <button type="submit">Létrehozás</button>
+      <button type="button" (click)="resetCreateForm()">Törlés</button>
+    </form>
+  </div>
+
+  <div style="flex: 1;">
+    <h3>Cég szerkesztése</h3>
+    <div>
+      <label>Cég ID:</label>
+      <input type="number" #idInput (keyup.enter)="loadCegForEdit(+(idInput.value))">
+      <button (click)="loadCegForEdit(+(idInput.value))">Betöltés</button>
+    </div>
+    <form (ngSubmit)="updateCeg()" *ngIf="editId">
+      <div>
+        <label>Név:</label>
+        <input type="text" [(ngModel)]="editForm.nev" name="editNev" required>
+      </div>
+      <button type="submit">Mentés</button>
+      <button type="button" (click)="resetEditForm()">Mégse</button>
+    </form>
+  </div>
+</div>
+
+<h3>Cégek listája</h3>
+<table border="1">
+  <tr>
+    <th>ID</th>
+    <th>Név</th>
+    <th>Műveletek</th>
+  </tr>
+  <tr *ngFor="let ceg of cegek">
+    <td>{{ ceg.id }}</td>
+    <td>{{ ceg.nev }}</td>
+    <td>
+      <button (click)="selectCegForEdit(ceg)">Szerkesztés</button>
+      <button (click)="deleteCeg(ceg.id!)">Törlés</button>
+    </td>
+  </tr>
+</table>
+

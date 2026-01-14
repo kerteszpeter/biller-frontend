@@ -1,0 +1,14 @@
+<h2>Cégek</h2>
+
+<table border="1">
+  <tr>
+    <th>ID</th>
+    <th>Név</th>
+  </tr>
+
+  <tr *ngFor="let ceg of cegek">
+    <td>{{ ceg.id }}</td>
+    <td>{{ ceg.nev }}</td>
+  </tr>
+</table>
+

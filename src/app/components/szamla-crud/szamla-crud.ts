@@ -12,12 +12,20 @@ import { CegService, CegDto } from '../../services/ceg';
   styleUrls: ['./szamla-crud.css']
 })
 export class SzamlaCrudComponent implements OnInit {
+  szamlak: SzamlaDto[] = [];
   cegek: CegDto[] = [];
   selectedSzamla: SzamlaDto | null = null;
-  isEditing: boolean = false;
-  isCreating: boolean = false;
+  editId: number | null = null;
 
-  szamlaForm: SzamlaDto = {
+  createForm: SzamlaDto = {
+    osszeg: '',
+    targy: '',
+    fizhat: '',
+    fizetve: false,
+    cegId: 0
+  };
+
+  editForm: SzamlaDto = {
     osszeg: '',
     targy: '',
     fizhat: '',
@@ -31,7 +39,14 @@ export class SzamlaCrudComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.loadSzamlak();
     this.loadCegek();
+  }
+
+  loadSzamlak(): void {
+    this.szamlaService.getSzamlak().subscribe(data => {
+      this.szamlak = data;
+    });
   }
 
   loadCegek(): void {
@@ -40,17 +55,10 @@ export class SzamlaCrudComponent implements OnInit {
     });
   }
 
-  createSzamla(): void {
-    this.isEditing = false;
-    this.isCreating = true;
-    this.selectedSzamla = null;
-    this.resetForm();
-  }
-
-  editSzamla(szamla: SzamlaDto): void {
+  selectSzamlaForEdit(szamla: SzamlaDto): void {
     this.selectedSzamla = szamla;
-    this.isEditing = true;
-    this.szamlaForm = {
+    this.editId = szamla.id || null;
+    this.editForm = {
       id: szamla.id,
       osszeg: szamla.osszeg,
       targy: szamla.targy,
@@ -60,58 +68,60 @@ export class SzamlaCrudComponent implements OnInit {
     };
   }
 
-  saveSzamla(): void {
-    if (this.isEditing && this.selectedSzamla?.id) {
-      this.szamlaService.updateSzamla(this.selectedSzamla.id, this.szamlaForm).subscribe(() => {
-        this.resetForm();
-        this.selectedSzamla = null;
-        this.isEditing = false;
-      });
-    } else {
-      this.szamlaService.createSzamla(this.szamlaForm).subscribe(() => {
-        this.resetForm();
-        this.isCreating = false;
-      });
-    }
-  }
-
   loadSzamlaForEdit(id: number): void {
     if (id) {
       this.szamlaService.getSzamlaById(id).subscribe(szamla => {
-        this.editSzamla(szamla);
+        this.selectSzamlaForEdit(szamla);
       });
     }
   }
 
-  deleteSzamlaById(id: number): void {
-    if (id) {
-      if (confirm('Biztosan törölni szeretné ezt a számlát?')) {
-        this.szamlaService.deleteSzamla(id).subscribe(() => {
-          if (this.selectedSzamla?.id === id) {
-            this.resetForm();
-            this.selectedSzamla = null;
-            this.isEditing = false;
-          }
-        });
-      }
+  createSzamla(): void {
+    this.szamlaService.createSzamla(this.createForm).subscribe(() => {
+      this.resetCreateForm();
+      this.loadSzamlak();
+    });
+  }
+
+  updateSzamla(): void {
+    if (this.editId) {
+      this.szamlaService.updateSzamla(this.editId, this.editForm).subscribe(() => {
+        this.loadSzamlak();
+      });
     }
   }
 
-  cancelEdit(): void {
-    this.resetForm();
-    this.selectedSzamla = null;
-    this.isEditing = false;
-    this.isCreating = false;
+  deleteSzamla(id: number): void {
+    if (confirm('Biztosan törölni szeretné ezt a számlát?')) {
+      this.szamlaService.deleteSzamla(id).subscribe(() => {
+        this.loadSzamlak();
+        if (this.selectedSzamla?.id === id) {
+          this.resetEditForm();
+        }
+      });
+    }
   }
 
-  resetForm(): void {
-    this.szamlaForm = {
+  resetCreateForm(): void {
+    this.createForm = {
       osszeg: '',
       targy: '',
       fizhat: '',
       fizetve: false,
       cegId: 0
     };
+  }
+
+  resetEditForm(): void {
+    this.editForm = {
+      osszeg: '',
+      targy: '',
+      fizhat: '',
+      fizetve: false,
+      cegId: 0
+    };
+    this.selectedSzamla = null;
+    this.editId = null;
   }
 
 }
