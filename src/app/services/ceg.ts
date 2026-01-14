@@ -12,7 +12,7 @@ export interface CegDto {
 })
 export class CegService {
 
-  private apiUrl = 'http://localhost:8080/api/cegek';
+  private apiUrl = 'http://localhost:9090/api/cegek';
 
   constructor(private http: HttpClient) {}
 

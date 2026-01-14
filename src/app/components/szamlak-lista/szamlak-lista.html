@@ -1,0 +1,21 @@
+<h2>Számlák</h2>
+
+<table border="1">
+  <tr>
+    <th>ID</th>
+    <th>Összeg</th>
+    <th>Cég</th>
+    <th>Tárgy</th>
+    <th>Fizetési határidő</th>
+    <th>Kifizetve</th>
+  </tr>
+
+  <tr *ngFor="let szamla of szamlak">
+    <td>{{ szamla.id }}</td>
+    <td>{{ szamla.osszeg }}</td>
+    <td>{{ szamla.cegNev }}</td>
+    <td>{{ szamla.targy }}</td>
+    <td>{{ szamla.fizhat }}</td>
+    <td>{{ szamla.fizetve ? 'igen' : 'nem' }}</td>
+  </tr>
+</table>

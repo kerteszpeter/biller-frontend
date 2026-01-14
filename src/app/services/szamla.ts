@@ -16,7 +16,7 @@ export interface SzamlaDto {
 })
 export class SzamlaService {
 
-  private apiUrl = 'http://localhost:8080/api/szamlak';
+  private apiUrl = 'http://localhost:9090/api/szamlak';
 
   constructor(private http: HttpClient) {}
 
