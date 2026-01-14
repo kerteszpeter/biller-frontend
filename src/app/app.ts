@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { SzamlakListaComponent } from './components/szamlak-lista/szamlak-lista';
+import { RouterOutlet, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [SzamlakListaComponent],
+  imports: [RouterOutlet, RouterLink],
   templateUrl: './app.html',
   styleUrls: ['./app.css']
 })

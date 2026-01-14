@@ -1,0 +1,47 @@
+<h2>Számlák kezelése</h2>
+
+<button (click)="createSzamla()" *ngIf="!isEditing && !isCreating">Új számla</button>
+
+<div *ngIf="isEditing || isCreating">
+  <h3>{{ isEditing ? 'Számla szerkesztése' : 'Új számla' }}</h3>
+  <form (ngSubmit)="saveSzamla()">
+    <div>
+      <label>Tárgy:</label>
+      <input type="text" [(ngModel)]="szamlaForm.targy" name="targy" required>
+    </div>
+    <div>
+      <label>Összeg:</label>
+      <input type="text" [(ngModel)]="szamlaForm.osszeg" name="osszeg" required>
+    </div>
+    <div>
+      <label>Fizetési határidő:</label>
+      <input type="text" [(ngModel)]="szamlaForm.fizhat" name="fizhat" required>
+    </div>
+    <div>
+      <label>Cég:</label>
+      <select [(ngModel)]="szamlaForm.cegId" name="cegId" required>
+        <option value="0">Válasszon céget</option>
+        <option *ngFor="let ceg of cegek" [value]="ceg.id">{{ ceg.nev }}</option>
+      </select>
+    </div>
+    <div>
+      <label>
+        <input type="checkbox" [(ngModel)]="szamlaForm.fizetve" name="fizetve">
+        Fizetve
+      </label>
+    </div>
+    <button type="submit">Mentés</button>
+    <button type="button" (click)="cancelEdit()">Mégse</button>
+  </form>
+</div>
+
+<div *ngIf="!isEditing && !isCreating">
+  <h3>Szerkesztés vagy törlés</h3>
+  <div>
+    <label>Számla ID:</label>
+    <input type="number" #idInput>
+    <button (click)="loadSzamlaForEdit(+(idInput.value))">Betöltés szerkesztéshez</button>
+    <button (click)="deleteSzamlaById(+(idInput.value))">Törlés</button>
+  </div>
+</div>
+
