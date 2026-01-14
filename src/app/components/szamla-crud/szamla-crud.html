@@ -1,6 +1,6 @@
 <h2>Számlák kezelése</h2>
 
-<div style="display: flex; gap: 20px;">
+<div style="display: flex; flex-direction: column; gap: 20px;">
   <div style="flex: 1;">
     <h3>Új számla létrehozása</h3>
     <form (ngSubmit)="createSzamla()">
@@ -34,14 +34,9 @@
     </form>
   </div>
 
-  <div style="flex: 1;">
+  <div style="flex: 1;" *ngIf="editId">
     <h3>Számla szerkesztése</h3>
-    <div>
-      <label>Számla ID:</label>
-      <input type="number" #idInput (keyup.enter)="loadSzamlaForEdit(+(idInput.value))">
-      <button (click)="loadSzamlaForEdit(+(idInput.value))">Betöltés</button>
-    </div>
-    <form (ngSubmit)="updateSzamla()" *ngIf="editId">
+    <form (ngSubmit)="updateSzamla()">
       <div>
         <label>Tárgy:</label>
         <input type="text" [(ngModel)]="editForm.targy" name="editTargy" required>
@@ -71,30 +66,30 @@
       <button type="button" (click)="resetEditForm()">Mégse</button>
     </form>
   </div>
+
+  <h3>Számlák listája</h3>
+  <table border="1">
+    <tr>
+      <th>ID</th>
+      <th>Tárgy</th>
+      <th>Összeg</th>
+      <th>Cég</th>
+      <th>Fizetési határidő</th>
+      <th>Fizetve</th>
+      <th>Műveletek</th>
+    </tr>
+    <tr *ngFor="let szamla of szamlak">
+      <td>{{ szamla.id }}</td>
+      <td>{{ szamla.targy }}</td>
+      <td>{{ szamla.osszeg }}</td>
+      <td>{{ szamla.cegNev }}</td>
+      <td>{{ szamla.fizhat }}</td>
+      <td>{{ szamla.fizetve ? 'igen' : 'nem' }}</td>
+      <td>
+        <button (click)="selectSzamlaForEdit(szamla)">Szerkesztés</button>
+        <button (click)="deleteSzamla(szamla.id!)">Törlés</button>
+      </td>
+    </tr>
+  </table>
+
 </div>
-
-<h3>Számlák listája</h3>
-<table border="1">
-  <tr>
-    <th>ID</th>
-    <th>Tárgy</th>
-    <th>Összeg</th>
-    <th>Cég</th>
-    <th>Fizetési határidő</th>
-    <th>Fizetve</th>
-    <th>Műveletek</th>
-  </tr>
-  <tr *ngFor="let szamla of szamlak">
-    <td>{{ szamla.id }}</td>
-    <td>{{ szamla.targy }}</td>
-    <td>{{ szamla.osszeg }}</td>
-    <td>{{ szamla.cegNev }}</td>
-    <td>{{ szamla.fizhat }}</td>
-    <td>{{ szamla.fizetve ? 'igen' : 'nem' }}</td>
-    <td>
-      <button (click)="selectSzamlaForEdit(szamla)">Szerkesztés</button>
-      <button (click)="deleteSzamla(szamla.id!)">Törlés</button>
-    </td>
-  </tr>
-</table>
-
